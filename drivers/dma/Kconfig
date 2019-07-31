@@ -556,6 +556,13 @@ config XILINX_ZYNQMP_DMA
 	help
 	  Enable support for Xilinx ZynqMP DMA controller.
 
+config WISHBONE_STREAMER_DMA
+	bool "Wishbone streamer DMA"
+	select DMA_ENGINE
+	select DMA_VIRTUAL_CHANNELS
+	help
+	  Enable support for Wishbone streamer DMA softcore
+
 config ZX_DMA
 	tristate "ZTE ZX296702 DMA support"
 	depends on ARCH_ZX || COMPILE_TEST
@@ -572,7 +579,8 @@ source "drivers/dma/qcom/Kconfig"
 
 source "drivers/dma/dw/Kconfig"
 
-source "drivers/dma/hsu/Kconfig"
+config DMA_ENGINE
+	bool
 
 source "drivers/dma/sh/Kconfig"
 
