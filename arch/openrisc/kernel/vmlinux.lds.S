@@ -30,13 +30,24 @@
 #include <asm/cache.h>
 #include <asm-generic/vmlinux.lds.h>
 
-OUTPUT_FORMAT("elf32-or32", "elf32-or32", "elf32-or32")
+/* we are used compiler or1k-elf, so output format is elf32-or1k. */
+#define __OR1K__
+
+#ifdef __OR1K__
+#define __OUTPUT_FORMAT        "elf32-or1k"
+#else
+#define __OUTPUT_FORMAT        "elf32-or32"
+#endif
+
+OUTPUT_FORMAT(__OUTPUT_FORMAT, __OUTPUT_FORMAT, __OUTPUT_FORMAT)
 jiffies = jiffies_64 + 4;
 
 SECTIONS
 {
         /* Read-only sections, merged into text segment: */
         . = LOAD_BASE ;
+
+	_text = .;
 
 	/* _s_kernel_ro must be page aligned */
 	. = ALIGN(PAGE_SIZE);

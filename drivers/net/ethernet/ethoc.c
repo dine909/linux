@@ -26,7 +26,7 @@
 #include <linux/module.h>
 #include <net/ethoc.h>
 
-static int buffer_size = 0x8000; /* 32 KBytes */
+static int buffer_size = 0x20000; /* 128 KBytes */
 module_param(buffer_size, int, 0);
 MODULE_PARM_DESC(buffer_size, "DMA buffer allocation size");
 
@@ -1306,6 +1306,7 @@ static int ethoc_resume(struct platform_device *pdev)
 
 static const struct of_device_id ethoc_match[] = {
 	{ .compatible = "opencores,ethoc", },
+	{ .compatible = "opencores,ethmac-rtlsvn338" },
 	{},
 };
 MODULE_DEVICE_TABLE(of, ethoc_match);
