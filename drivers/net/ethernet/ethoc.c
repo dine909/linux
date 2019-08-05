@@ -25,7 +25,7 @@
 #include <linux/module.h>
 #include <net/ethoc.h>
 
-static int buffer_size = 0x8000; /* 32 KBytes */
+static int buffer_size = 0x20000; /* 128 KBytes */
 module_param(buffer_size, int, 0);
 MODULE_PARM_DESC(buffer_size, "DMA buffer allocation size");
 
@@ -231,12 +231,20 @@ struct ethoc_bd {
 
 static inline u32 ethoc_read(struct ethoc *dev, loff_t offset)
 {
+#ifdef CONFIG_WISHBONE_BUS_BIG_ENDIAN
+	return ioread32be(dev->iobase + offset);
+#else
 	return ioread32(dev->iobase + offset);
+#endif
 }
 
 static inline void ethoc_write(struct ethoc *dev, loff_t offset, u32 data)
 {
+#ifdef CONFIG_WISHBONE_BUS_BIG_ENDIAN
+	iowrite32be(data, dev->iobase + offset);
+#else
 	iowrite32(data, dev->iobase + offset);
+#endif
 }
 
 static inline void ethoc_read_bd(struct ethoc *dev, int index,
@@ -1043,6 +1051,11 @@ static int ethoc_probe(struct platform_device *pdev)
 		mac = of_get_property(pdev->dev.of_node,
 				      "local-mac-address",
 				      NULL);
+		/* Better approach:
+		#include <linux/of_net.h>
+		mac = of_get_mac_address(pdev->dev.of_node);
+		*/
+
 		if (mac)
 			memcpy(netdev->dev_addr, mac, IFHWADDRLEN);
 		}
@@ -1183,7 +1196,7 @@ static int ethoc_resume(struct platform_device *pdev)
 #endif
 
 static struct of_device_id ethoc_match[] = {
-	{ .compatible = "opencores,ethoc", },
+	{ .compatible = "opencores,ethmac-rtlsvn338" },
 	{},
 };
 MODULE_DEVICE_TABLE(of, ethoc_match);

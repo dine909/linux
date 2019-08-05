@@ -979,6 +979,27 @@ config FB_PVR2
 	  (<file:drivers/video/pvr2fb.c>). Please see the file
 	  <file:Documentation/fb/pvr2fb.txt>.
 
+config FB_OC
+	bool "OpenCores VGA/LCD core 2.0 framebuffer support"
+	depends on OPENRISC
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	default n
+	---help---
+	  Frame buffer driver for the OpenCores VGA/LCD core.
+
+	  If unsure, say N.
+
+config FB_OC_SHMEM
+	bool "Framebuffer is in main memory"
+	default y
+	depends on OPENRISC
+	---help---
+	  If VGA/LCD core has dedicated framebuffer memory answer N
+
+	  If unsure, say Y.
+
 config FB_S1D13XXX
 	tristate "Epson S1D13XXX framebuffer support"
 	depends on FB
